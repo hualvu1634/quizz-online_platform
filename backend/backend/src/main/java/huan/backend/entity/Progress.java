@@ -1,5 +1,7 @@
 package huan.backend.entity;
 
+import java.time.LocalDateTime;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -33,8 +35,8 @@ public class Progress {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "quiz_id", nullable = false) 
-    private Exam quiz; 
+    private Exam exam; 
     private Integer score; 
-
+    private LocalDateTime submittedAt;
     private Boolean isPassed; 
 }

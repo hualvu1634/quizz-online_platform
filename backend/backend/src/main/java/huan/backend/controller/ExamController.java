@@ -2,10 +2,11 @@ package huan.backend.controller;
 
 import huan.backend.dto.request.AnswerRequest;
 import huan.backend.dto.request.ExamRequest;
-import huan.backend.dto.request.ProgressRequest;
+import huan.backend.dto.request.ExamSubmitRequest;
 import huan.backend.dto.response.ApiResponse;
 import huan.backend.dto.response.AnswerResponse;
 import huan.backend.dto.response.ExamDetailResponse;
+import huan.backend.dto.response.ExamSubmitResponse;
 import huan.backend.service.ExamService; 
 import huan.backend.service.ProgressService;
 import huan.backend.service.QuestionService;
@@ -54,9 +55,9 @@ public class ExamController {
     public ResponseEntity<AnswerResponse> checkAnswer(@Valid @RequestBody AnswerRequest request) {
         return ResponseEntity.ok(questionService.checkAnswer(request));
     }
-
-    @PostMapping("/completed")
-    public ResponseEntity<ApiResponse> completedExam(@Valid @RequestBody ProgressRequest progressRequest) {
-        return ResponseEntity.status(HttpStatus.OK).body(progressService.markLessonAsCompleted(progressRequest)); 
+    @PostMapping("/submit")
+    public ResponseEntity<ExamSubmitResponse> submit(@Valid @RequestBody ExamSubmitRequest examSubmitRequest){
+        return ResponseEntity.ok(progressService.submitExam(examSubmitRequest));
     }
+
 }

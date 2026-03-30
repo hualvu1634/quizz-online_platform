@@ -6,11 +6,9 @@ import lombok.Getter;
 public enum ErrorCode {
     INTERNAL_SERVER_ERROR(500, "Lỗi hệ thống"),
     USER_EXISTED(400, "tài khoản đã tồn tại"), 
-    LESSON_EXISTED(400, "bài học đã tồn tại"),
     CATEGORY_EXISTED(400, "Danh mục đã tồn tại"),
     EXAM_EXISTED(400,"Khóa học đã tồn tại"),
     USER_NOT_FOUND(404, "Không tìm thấy người dùng"),
-    LESSON_NOT_FOUND(404, "Sản phẩm không tồn tại"),
     CATEGORY_NOT_FOUND(404, "Danh mục không tồn tại"),
     EXAM_NOT_FOUND(404,"Bài kiểm tra không tồn tại"),
     QUESTION_NOT_FOUND(404,"Câu hỏi không tồn tại"),

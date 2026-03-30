@@ -11,7 +11,7 @@ import huan.backend.exception.AppException;
 import huan.backend.mapper.ExamMapper;
 import huan.backend.mapper.QuestionMapper;
 import huan.backend.repository.CategoryRepository;
-import huan.backend.repository.ExamRepository; // Nhớ đổi tên Repository
+import huan.backend.repository.ExamRepository; 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,7 +31,7 @@ public class ExamService {
 
     public ExamDetailResponse getExam(Long examId) {
         Exam exam = examRepository.findById(examId)
-                .orElseThrow(() -> new AppException(ErrorCode.EXAM_NOT_FOUND)); // Định nghĩa lại ErrorCode
+                .orElseThrow(() -> new AppException(ErrorCode.EXAM_NOT_FOUND)); 
         return examMapper.toResponse(exam);
     }
 

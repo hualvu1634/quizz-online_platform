@@ -135,7 +135,7 @@ const Exam = () => {
                 <h2 className="fw-bold mb-3">{examDetail.name}</h2>
                 <div className="d-flex gap-4 text-muted">
                     <span><i className="bi bi-clock me-1"></i> Tổng thời gian: {examDetail.duration} phút</span>
-                    <span><i className="bi bi-folder me-1"></i> Danh mục: {examDetail.categoryName}</span>
+                  
                 </div>
             </div>
 

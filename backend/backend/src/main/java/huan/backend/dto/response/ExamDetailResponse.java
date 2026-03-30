@@ -13,7 +13,5 @@ public class ExamDetailResponse {
     private Long id;
     private String name; 
     private Integer duration;
-  
-    
     private List<QuestionResponse> questions;
 }

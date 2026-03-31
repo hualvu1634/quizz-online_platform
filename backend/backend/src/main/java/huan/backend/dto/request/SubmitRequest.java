@@ -2,12 +2,12 @@ package huan.backend.dto.request;
 
 import lombok.Getter;
 import lombok.Setter;
-import java.util.List;
+import java.util.Map;
 
 @Getter
 @Setter
-public class ExamSubmitRequest {
+public class SubmitRequest {
     private Long userId;
     private Long examId;
-    private List<AnswerRequest> answers; 
+    private Map<Long, Integer> answers; 
 }

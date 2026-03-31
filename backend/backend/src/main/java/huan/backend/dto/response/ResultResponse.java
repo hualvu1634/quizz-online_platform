@@ -9,10 +9,8 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Builder
-public class ExamSubmitResponse {
-    private int score;
-    private int totalQuestions;
+public class ResultResponse {
+    private Double score;
     private int correctAnswers;
-    private boolean isPassed;
     private LocalDateTime submittedAt;
 }

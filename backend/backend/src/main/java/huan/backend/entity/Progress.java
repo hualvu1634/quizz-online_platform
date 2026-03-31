@@ -34,9 +34,8 @@ public class Progress {
 
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "quiz_id", nullable = false) 
+    @JoinColumn(name = "exam_id", nullable = false) 
     private Exam exam; 
-    private Integer score; 
+    private Double score; 
     private LocalDateTime submittedAt;
-    private Boolean isPassed; 
 }

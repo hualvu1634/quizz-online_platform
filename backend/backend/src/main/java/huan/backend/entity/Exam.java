@@ -44,11 +44,9 @@ public class Exam {
     @Column(name = "is_active")
     private Boolean isActive = true; 
 
-    // Thêm trường thời gian kiểm tra (tính bằng phút)
     @Column(nullable = false)
     private Integer duration;
 
-    // Liên kết trực tiếp với Category thay vì Subject
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id", nullable = false)
     private Category category;

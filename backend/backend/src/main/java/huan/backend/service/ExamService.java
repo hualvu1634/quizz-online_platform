@@ -3,6 +3,8 @@ package huan.backend.service;
 import huan.backend.dto.request.ExamRequest;
 import huan.backend.dto.response.ApiResponse;
 import huan.backend.dto.response.ExamDetailResponse;
+import huan.backend.dto.response.ExamResponse;
+import huan.backend.dto.response.PageResponse;
 import huan.backend.entity.Category;
 import huan.backend.entity.Exam;
 import huan.backend.entity.Question;
@@ -13,8 +15,12 @@ import huan.backend.mapper.QuestionMapper;
 import huan.backend.repository.CategoryRepository;
 import huan.backend.repository.ExamRepository; 
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -46,7 +52,6 @@ public class ExamService {
         Exam exam = examMapper.toEntity(request);
         exam.setCategory(category);
 
-        if (request.getQuestions() != null && !request.getQuestions().isEmpty()) {
             List<Question> questions = request.getQuestions().stream()
                     .map(qReq -> {
                         Question q = questionMapper.toEntity(qReq);
@@ -54,40 +59,26 @@ public class ExamService {
                         return q;
                     }).collect(Collectors.toList());
             exam.setQuestions(questions);
-        }
+
 
         return examMapper.toResponse(examRepository.save(exam));
     }
 
-    @Transactional
-    public ExamDetailResponse updateExam(Long id, ExamRequest request) {
-        Exam exam = examRepository.findById(id)
-                .orElseThrow(() -> new AppException(ErrorCode.EXAM_NOT_FOUND));
+    public PageResponse<ExamResponse> getAll(int page, int size){
+        Pageable pageable = PageRequest.of(page - 1, size, Sort.by("id").ascending());
+        Page<Exam> pageData = examRepository.findAll(pageable);
+        
+        List<ExamResponse> responseList = pageData.getContent().stream()
+                .map(examMapper::toExamResponse) 
+                .collect(Collectors.toList());
 
-        if (!exam.getName().equals(request.getName()) &&
-                examRepository.existsByName(request.getName())) {
-            throw new AppException(ErrorCode.EXAM_EXISTED);
-        }
-
-        examMapper.updateEntity(request, exam);
-
-        if (request.getCategoryId() != null && !exam.getCategory().getId().equals(request.getCategoryId())) {
-            Category category = categoryRepository.findById(request.getCategoryId())
-                    .orElseThrow(() -> new AppException(ErrorCode.CATEGORY_NOT_FOUND));
-            exam.setCategory(category);
-        }
-        if (request.getQuestions() != null) {
-            exam.getQuestions().clear();
-            List<Question> newQuestions = request.getQuestions().stream()
-                    .map(qReq -> {
-                        Question q = questionMapper.toEntity(qReq);
-                        q.setExam(exam);
-                        return q;
-                    }).collect(Collectors.toList());
-            exam.getQuestions().addAll(newQuestions);
-        }
-
-        return examMapper.toResponse(examRepository.save(exam));
+        return PageResponse.<ExamResponse>builder()
+                .currentPage(page)
+                .pageSize(pageData.getSize())
+                .totalPages(pageData.getTotalPages())
+                .totalElements(pageData.getTotalElements())
+                .data(responseList)
+                .build();
     }
 
     public ApiResponse deleteExam(Long id) {

@@ -16,7 +16,7 @@ public class ExamRequest {
     @NotBlank(message = "NOT_NULL")
     private String name;
     
-    private String posterUrl; // Có thể để trống nếu chưa có ảnh
+    private String posterUrl; 
 
     @NotNull(message = "NOT_NULL")
     private LocalDate startTime;
@@ -27,7 +27,7 @@ public class ExamRequest {
     @NotNull(message = "NOT_NULL")
     private Long categoryId;
 
-    @Valid // Kích hoạt validation cho các object bên trong list
+    @Valid 
     @NotEmpty(message = "NOT_NULL")
     private List<QuestionRequest> questions;
 }

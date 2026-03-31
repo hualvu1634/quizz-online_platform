@@ -15,7 +15,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/categories")
-@CrossOrigin(origins = "http://localhost:3000") // Cân nhắc chuyển cái này vào WebMvcConfigurer config tổng
+@CrossOrigin(origins = "http://localhost:3000") 
 @RequiredArgsConstructor
 public class CategoryController {
 

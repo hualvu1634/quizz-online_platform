@@ -23,6 +23,9 @@ const examApi = {
 
     completeExam: (data) => {
         return axiosClient.post('/exams/completed', data);
+    },
+    submitExam: (data) => {
+        return axiosClient.post('/exams/submit', data);
     }
 };
 

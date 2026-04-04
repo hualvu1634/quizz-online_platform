@@ -17,7 +17,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -38,46 +37,40 @@ public class ProgressService {
 
         Exam exam = examRepository.findById(request.getExamId())
                 .orElseThrow(() -> new AppException(ErrorCode.EXAM_NOT_FOUND));
+                
         List<Question> examQuestions = questionRepository.findByExamId(request.getExamId());
         int totalQuestions = examQuestions.size();
         
-        if (totalQuestions == 0) {
-            throw new AppException(ErrorCode.EXAM_NOT_FOUND); 
+        Map<Long, Integer> userAnswers = request.getAnswers();
+
+        int correctAnswers = 0;
+
+        for (Question question : examQuestions) {
+            Integer selectedOption = userAnswers.get(question.getId());
+
+            if (selectedOption == null) {
+                throw new AppException(ErrorCode.INCOMPLETE_EXAM);
+            }
+
+            if (selectedOption.equals(question.getAnswer())) {
+                correctAnswers++;
+            }
         }
 
-        Map<Long, Integer> userAnswersMap = request.getAnswers();
-
-        if (userAnswersMap == null) {
-            userAnswersMap = Collections.emptyMap();
-        }
-
-        final Map<Long, Integer> finalUserAnswers = userAnswersMap; 
-        
-        int correctAnswers = (int) examQuestions.stream()
-                .filter(question -> {
-                    Integer selectedOption = finalUserAnswers.get(question.getId());
-                    return selectedOption != null && selectedOption.equals(question.getAnswer());
-                })
-                .count();
-
-        // 5. Tính điểm (Thang 100, làm tròn 2 chữ số thập phân)
         double score = (double) correctAnswers / totalQuestions * 100.0;
         score = Math.round(score * 100.0) / 100.0; 
         
         LocalDateTime now = LocalDateTime.now();
-
-        // 6. Lưu vào Database
         Progress progress = Progress.builder()
-        .exam(exam)
-        .user(user)
-        .score(score)
-        .submittedAt(now)
-        .build();
-
+                .exam(exam)
+                .user(user)
+                .score(score)
+                .submittedAt(now)
+                .build();
 
         progressRepository.save(progress);
 
-        // 7. Trả về kết quả
+        // 5. Trả về kết quả
         return ResultResponse.builder()
                 .score(score)
                 .correctAnswers(correctAnswers)

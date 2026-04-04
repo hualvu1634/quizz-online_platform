@@ -52,13 +52,13 @@ public class ExamService {
         Exam exam = examMapper.toEntity(request);
         exam.setCategory(category);
 
-            List<Question> questions = request.getQuestions().stream()
-                    .map(qReq -> {
-                        Question q = questionMapper.toEntity(qReq);
+        List<Question> questions = request.getQuestions().stream()
+                    .map(dto -> {
+                        Question q = questionMapper.toEntity(dto);
                         q.setExam(exam);
                         return q;
                     }).collect(Collectors.toList());
-            exam.setQuestions(questions);
+        exam.setQuestions(questions);
 
 
         return examMapper.toResponse(examRepository.save(exam));
@@ -82,10 +82,9 @@ public class ExamService {
     }
 
     public ApiResponse deleteExam(Long id) {
-        if (!examRepository.existsById(id)) {
-            throw new AppException(ErrorCode.EXAM_NOT_FOUND);
-        }
-        examRepository.deleteById(id);
+        Exam exam = examRepository.findById(id)
+        .orElseThrow(() -> new AppException(ErrorCode.EXAM_NOT_FOUND));
+        examRepository.delete(exam);
         return ApiResponse.builder()
                 .message("Xóa bài thi thành công")
                 .code(200)

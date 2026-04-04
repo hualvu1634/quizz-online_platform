@@ -38,7 +38,6 @@ public class ExamController {
             @RequestParam(value = "page", defaultValue = "1") int page){
         return ResponseEntity.ok(examService.getAll(page,12));
     }
-    @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping
     public ResponseEntity<ExamDetailResponse> createExam(@Valid @RequestBody ExamRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(examService.createExam(request));

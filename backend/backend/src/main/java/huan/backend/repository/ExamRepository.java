@@ -16,4 +16,5 @@ public interface ExamRepository extends JpaRepository<Exam, Long> {
     Page<Exam> findByCategoryIdAndIsActive(Long categoryId, Boolean isActive, Pageable pageable);
     
     List<Exam> findByCategoryId(Long categoryId);
+    
 }

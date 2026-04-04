@@ -32,6 +32,6 @@ public class Question {
     private Integer answer; 
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "exam_id", nullable = false) // Sửa từ lesson_id
+    @JoinColumn(name = "exam_id", nullable = false) 
     private Exam exam; 
 }

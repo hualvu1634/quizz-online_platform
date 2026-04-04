@@ -18,7 +18,8 @@ public enum ErrorCode {
     NOT_NULL(400,"Không được để trống"),
     INVALID_SIZE(400, "Độ dài ký tự không hợp lệ"),
     INVALID_MIN(400, "Giá trị đầu vào không hợp lệ"),
-    INVALID_PHONE(400, "Định dạng số điện thoại không đúng");
+    INVALID_PHONE(400, "Định dạng số điện thoại không đúng"), 
+    INCOMPLETE_EXAM(400,"Vui lòng chọn đáp án");
 
     private int code;
     private String message;

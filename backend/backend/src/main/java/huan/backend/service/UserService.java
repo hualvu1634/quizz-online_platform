@@ -40,6 +40,7 @@ public class UserService {
         if(userRepository.existsByEmail(accountRequest.getEmail())||userRepository.existsByPhoneNumber(accountRequest.getPhoneNumber()))
             throw new AppException(ErrorCode.USER_EXISTED);
         User user = userMapper.toEntity(accountRequest);
+       
         user.setPassword(passwordEncoder.encode(accountRequest.getPassword()));
         user.setRole(Role.USER);
         

@@ -8,9 +8,9 @@ import huan.backend.dto.request.UserRequest;
 import huan.backend.dto.response.UserResponse;
 import huan.backend.entity.User;
 
-@Mapper(componentModel = "spring") // Để Spring có thể @Autowired
+@Mapper(componentModel = "spring") 
 public interface UserMapper {
-      @Mapping(target = "id", ignore = true) 
+      // @Mapping(target = "id", ignore = true) 
     UserResponse toResponse(User user);
     @Mapping(target = "password", ignore = true) 
     @Mapping(target = "role", ignore = true)

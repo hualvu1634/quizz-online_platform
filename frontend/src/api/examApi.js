@@ -8,7 +8,9 @@ const examApi = {
     createExam: (data) => {
         return axiosClient.post('/exams', data);
     },
-
+     getAll() {
+        return axiosClient.get('/exams');
+    },
     updateExam: (id, data) => {
         return axiosClient.put(`/exams/${id}`, data);
     },
@@ -21,9 +23,6 @@ const examApi = {
         return axiosClient.post('/exams/check-answer', data);
     },
 
-    completeExam: (data) => {
-        return axiosClient.post('/exams/completed', data);
-    },
     submitExam: (data) => {
         return axiosClient.post('/exams/submit', data);
     }

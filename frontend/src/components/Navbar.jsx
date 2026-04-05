@@ -103,7 +103,7 @@ const Navbar = () => {
           style={getTabStyle(null)} 
           onClick={() => handleCategoryClick(null)}
         >
-          Tất cả khóa học
+          Tất cả 
         </button>
         {categories.map(cat => (
           <button 

@@ -1,24 +1,32 @@
 package huan.backend.service;
 
 import huan.backend.dto.request.SubmitRequest;
-import huan.backend.dto.response.ResultResponse;
+import huan.backend.dto.response.PageResponse;
+import huan.backend.dto.response.SubmitResponse;
 import huan.backend.entity.Exam;
 import huan.backend.entity.Progress;
 import huan.backend.entity.Question;
 import huan.backend.entity.User;
 import huan.backend.enumerate.ErrorCode;
 import huan.backend.exception.AppException;
+import huan.backend.mapper.ProgressMapper;
 import huan.backend.repository.ExamRepository;
 import huan.backend.repository.ProgressRepository;
 import huan.backend.repository.QuestionRepository;
 import huan.backend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -28,9 +36,12 @@ public class ProgressService {
     private final ExamRepository examRepository; 
     private final UserRepository userRepository;
     private final QuestionRepository questionRepository;
+    
+    // Inject MapStruct Mapper
+    private final ProgressMapper progressMapper;
 
     @Transactional
-    public ResultResponse submitExam(SubmitRequest request) {
+    public SubmitResponse submitExam(SubmitRequest request) {
 
         User user = userRepository.findById(request.getUserId())
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
@@ -42,7 +53,6 @@ public class ProgressService {
         int totalQuestions = examQuestions.size();
         
         Map<Long, Integer> userAnswers = request.getAnswers();
-
         int correctAnswers = 0;
 
         for (Question question : examQuestions) {
@@ -57,7 +67,7 @@ public class ProgressService {
             }
         }
 
-        double score = (double) correctAnswers / totalQuestions * 100.0;
+        double score = (double) correctAnswers / totalQuestions * 10.0;
         score = Math.round(score * 100.0) / 100.0; 
         
         LocalDateTime now = LocalDateTime.now();
@@ -70,11 +80,33 @@ public class ProgressService {
 
         progressRepository.save(progress);
 
-        // 5. Trả về kết quả
-        return ResultResponse.builder()
+        // Trả về kết quả ngay khi thi xong (có đủ correctAnswers)
+        return SubmitResponse.builder()
+                .userId(request.getUserId())
+                .examId(request.getExamId())
                 .score(score)
                 .correctAnswers(correctAnswers)
                 .submittedAt(now)
+                .build();
+    }
+
+    public PageResponse<SubmitResponse> getUserHistory(Long userId, int page, int size) {
+
+        Pageable pageable = PageRequest.of(page - 1, size, Sort.by("submittedAt").descending());
+        
+        Page<Progress> pageData = progressRepository.findByUserId(userId, pageable);
+        
+        // Dùng MapStruct mapper ở đây
+        List<SubmitResponse> responseList = pageData.getContent().stream()
+                .map(progressMapper::toSubmitResponse) 
+                .collect(Collectors.toList());
+
+        return PageResponse.<SubmitResponse>builder()
+                .currentPage(page)
+                .pageSize(pageData.getSize())
+                .totalPages(pageData.getTotalPages())
+                .totalElements(pageData.getTotalElements())
+                .data(responseList)
                 .build();
     }
 }

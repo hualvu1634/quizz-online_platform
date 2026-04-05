@@ -6,7 +6,7 @@ import huan.backend.dto.response.ApiResponse;
 
 import huan.backend.dto.response.ExamDetailResponse;
 import huan.backend.dto.response.ExamResponse;
-import huan.backend.dto.response.ResultResponse;
+import huan.backend.dto.response.SubmitResponse;
 import huan.backend.dto.response.PageResponse;
 import huan.backend.service.ExamService; 
 import huan.backend.service.ProgressService;
@@ -51,7 +51,7 @@ public class ExamController {
 
 
     @PostMapping("/submit")
-    public ResponseEntity<ResultResponse> submit(@Valid @RequestBody SubmitRequest examSubmitRequest){
+    public ResponseEntity<SubmitResponse> submit(@Valid @RequestBody SubmitRequest examSubmitRequest){
         return ResponseEntity.ok(progressService.submitExam(examSubmitRequest));
     }
 

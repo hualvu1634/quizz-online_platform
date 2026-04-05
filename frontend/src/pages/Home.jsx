@@ -98,7 +98,7 @@ const Home = () => {
                             className="btn btn-primary px-4 w-100"
                             onClick={() => handleEnrollClick(exam.id)}
                           >
-                            Làm bài thi
+                            Làm bài 
                           </button>
                       </div>
                     </div>
